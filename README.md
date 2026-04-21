@@ -64,7 +64,7 @@ El reporte está organizado en **4 páginas** con navegación dinámica:
 
 ## 🔗 Acceso al proyecto
 
-👉 [Ver archivo Power BI]([https://drive.google.com/file/d/1A2-rHMn5XnKhyvf6ioFXlbHATW6LdE1a/view?usp=sharing](https://app.powerbi.com/view?r=eyJrIjoiZDA5MzUxMzctZWVmNC00MjAzLWIxMmUtOTQ0YjU4NDMzNjA2IiwidCI6IjQ5ZmVkNjk3LTAxZmYtNDJkNi1hNWEzLTZlNjViYTcwZDg5ZSIsImMiOjR9))
+👉 [Ver archivo Power BI](https://app.powerbi.com/view?r=eyJrIjoiZDA5MzUxMzctZWVmNC00MjAzLWIxMmUtOTQ0YjU4NDMzNjA2IiwidCI6IjQ5ZmVkNjk3LTAxZmYtNDJkNi1hNWEzLTZlNjViYTcwZDg5ZSIsImMiOjR9)
 
 ---
 
