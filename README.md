@@ -8,67 +8,115 @@
 
 ## 💡 Problema que resuelve
 
-ServiTech no contaba con indicadores claros para evaluar el cumplimiento de SLA ni con visualizaciones que facilitaran la toma de decisiones operativas. El proyecto centralizó los datos, permitió detectar picos de actividad, estacionalidad y cuellos de botella, y mejoró la capacidad de supervisión sobre los tiempos de resolución.
+ServiTech no contaba con indicadores claros para evaluar tendencias, comparar períodos ni detectar patrones de actividad. El proyecto centralizó más de 9.000 solicitudes, permitió comparar el volumen de proyectos año a año, identificar gestores con mayor carga y visualizar los proyectos abiertos que aún no tienen cierre registrado.
 
 ---
 
 ## 🏢 Contexto del negocio
 
-ServiTech es una empresa ficticia del sector tecnológico que brinda soluciones de soporte técnico a sus clientes. Se analizan **más de 9.000 solicitudes de servicio** registradas entre 2020 y 2023, abarcando información de proyectos, tiempos de respuesta, incidencias y cumplimiento operativo.
+ServiTech es una empresa del sector tecnológico que brinda soporte técnico a sus clientes. Se analizan **9.387 solicitudes de servicio** registradas entre 2020 y 2023, con información de clientes, gestores, prioridades, categorías y fechas de apertura y cierre.
 
 ---
 
 ## 🎯 Objetivo
 
-Construir reportes y dashboards interactivos que permitan:
-- Monitorear el rendimiento del soporte técnico
-- Identificar desvíos en los tiempos de respuesta
-- Optimizar procesos internos basados en métricas confiables
+Construir un reporte interactivo en Power BI que permita monitorear la evolución de los proyectos, comparar períodos anuales y analizar el desempeño por gestor y cliente.
 
 ---
 
-## 📋 Estructura del dashboard
+## 📸 Vista del reporte
 
-El reporte está organizado en **4 páginas** con navegación dinámica:
+### Portada con navegación
+![Portada ServiTech](imagenes/portada.png)
+
+### Informe por Proyectos
+![Informe por Proyectos](imagenes/informe-proyectos.png)
+
+### Informe por Gestores
+![Informe por Gestores](imagenes/informe-gestores.png)
+
+---
+
+## 📋 Estructura del reporte
+
+El reporte está organizado en **3 páginas** con navegación dinámica mediante botones con marcadores:
 
 | Página | Contenido |
 |---|---|
-| **Portada** | Presentación e índice de navegación |
-| **Proyectos** | Volumen total de solicitudes, proyectos cerrados, costo de gestión y distribución por cliente |
-| **Interanual** | Variación porcentual de proyectos mes a mes usando medida DAX `Proyectos YoY%` |
-| **Cumplimiento** | Desempeño operativo con semáforo visual, rendimiento por gestor y proyectos fuera de SLA |
+| **Portada** | Presentación con navegación hacia Informe por Proyectos e Informe por Gestores |
+| **Informe por Proyectos** | Proyectos totales año actual y anterior, crecimiento anual, proyectos cerrados, comparación mensual con año anterior y distribución por cliente y prioridad |
+| **Informe por Gestores** | Proyectos totales vs. cerrados por mes, distribución por gestor, precio/hora y tiempo máximo de respuesta |
 
 ---
 
-## ⚙️ Tecnología utilizada
+## ✅ Resultados clave (año 2022)
 
-- **Microsoft Power BI** — modelado de datos, DAX y visualizaciones interactivas
-
-### Métricas y técnicas aplicadas
-- Limpieza y modelado de datos
-- Tiempo promedio de resolución
-- Volumen y estado de incidencias por categoría
-- Medida DAX compleja: variación interanual (`YoY%`)
-- Semáforo visual de cumplimiento de SLA
+| Métrica | Valor |
+|---|---|
+| Proyectos totales año actual | 2.523 |
+| Proyectos totales año anterior | 2.512 |
+| Crecimiento anual | **+0,44%** |
+| Proyectos cerrados año actual | 1.250 |
+| Cliente con más proyectos | Soluciones Tecnológicas (274) |
+| Distribución por prioridad | Equitativa: ~25% en cada nivel |
+| Gestor con más proyectos | Jorge Martín (407) |
+| Precio/hora más alto | Sofía Navarro ($70) |
 
 ---
 
-## ✅ Resultados clave
+## ⚙️ Medidas DAX implementadas
 
-- Dashboard interactivo con más de 9.000 registros procesados
-- Identificación de cuellos de botella en la gestión de tickets
-- Visualización de patrones de estacionalidad y picos de actividad
-- Métrica de cumplimiento de SLA con detalle por gestor
+```dax
+-- Conteo de proyectos
+Proyectos = COUNTROWS(Solicitudes)
+
+-- Proyectos del año anterior (inteligencia de tiempo)
+Proyectos PY =
+CALCULATE(
+    [Proyectos],
+    SAMEPERIODLASTYEAR(Fechas[Fecha])
+)
+
+-- Variación interanual porcentual
+Proyectos YoY % =
+DIVIDE(
+    [Proyectos] - [Proyectos PY],
+    [Proyectos PY]
+)
+
+-- Proyectos cerrados usando relación inactiva
+Proyectos cerrados =
+CALCULATE(
+    [Proyectos],
+    USERELATIONSHIP(Fechas[Fecha], Solicitudes[FechaCierre]),
+    NOT ISBLANK(Solicitudes[FechaCierre])
+)
+```
+
+**`USERELATIONSHIP`** permitió analizar simultáneamente proyectos por fecha de apertura (relación activa) y por fecha de cierre (relación inactiva), sin eliminar ninguna de las dos conexiones del modelo.
+
+---
+
+## 🔧 Otras técnicas aplicadas
+
+- Modelado relacional con 6 tablas conectadas (Solicitudes, Cliente, Estado, Gestor/a, Prioridad, Categoría, Fechas)
+- Detección automática de relaciones y corrección manual de las no detectadas
+- Segmentación de datos con selección única forzada (`Forzar selección`)
+- Formato condicional por reglas en gráfico de columnas (positivo/negativo)
+- Línea de referencia constante en eje Y
+- Navegación entre vistas con marcadores (`Columnas` / `Líneas`)
+- Diseño de fondo personalizado con plantilla importada como imagen
 
 ---
 
 ## 🔗 Acceso al proyecto
 
-👉 [Ver archivo Power BI](https://app.powerbi.com/view?r=eyJrIjoiZDA5MzUxMzctZWVmNC00MjAzLWIxMmUtOTQ0YjU4NDMzNjA2IiwidCI6IjQ5ZmVkNjk3LTAxZmYtNDJkNi1hNWEzLTZlNjViYTcwZDg5ZSIsImMiOjR9)
+👉 [Ver reporte interactivo en Power BI](https://app.powerbi.com/view?r=eyJrIjoiMTk3ZDZjZmMtZTJhMS00Mzk5LWFiN2QtZDE5NTRmOWZmYmRiIiwidCI6IjQ5ZmVkNjk3LTAxZmYtNDJkNi1hNWEzLTZlNjViYTcwZDg5ZSIsImMiOjR9&pageName=bff729c211f7680b64d3)  
+👉 [Descargar archivo .pbix](https://drive.google.com/file/d/1sEeALqKlUdaNM1xZvX8mB7Ah5YfaYlPo/view)
 
 ---
 
 ## 👩‍💻 Autora
 
 **María Sofía Nolazco** — Ingeniera Civil | Analista de Datos  
-[LinkedIn](https://www.linkedin.com/in/mariasofia-nolazco-4a69a0134) · [Portfolio](https://sofianolazco.github.io/)
+[LinkedIn](https://www.linkedin.com/in/maria-sofia-nolazco-4a69a0134) · [Portfolio](https://sofianolazco.github.io/)
